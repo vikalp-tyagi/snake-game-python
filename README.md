@@ -1,4 +1,4 @@
-# snake-game-python
+# Snake Game
 
 Welcome to the Snake Game built in Python! This is a simple implementation of the classic Snake Game using Python's built-in libraries.
 
@@ -27,7 +27,7 @@ Here are some screenshots of the game in action:
 
 2. Navigate to the project directory:
     ```bash
-    cd game
+    cd Game
     ```
 
 3. Run the game:
