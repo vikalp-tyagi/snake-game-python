@@ -22,7 +22,7 @@ Here are some screenshots of the game in action:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/snake-game-python.git
+    git clone https://github.com/Vikalp013/snake-game-python.git
     ```
 
 2. Navigate to the project directory:
