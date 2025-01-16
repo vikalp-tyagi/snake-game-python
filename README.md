@@ -14,7 +14,7 @@ Here are some screenshots of the game in action:
 
 ## How to Play
 
-- Use the arrow keys to control the snake's movement.
+- Use the arrow keys or WASD keys to control the snake's movement.
 - Eat the food (represented by the red square) to grow longer.
 - Avoid hitting the walls or your own tail.
 
