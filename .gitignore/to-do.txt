@@ -1,0 +1,2 @@
+Improve graphics
+Add multiplayer mode
