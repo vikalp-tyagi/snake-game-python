@@ -23,38 +23,34 @@ Link: https://www.gnu.org/licenses/
 '''
 
 import turtle
-import random
 import time
+import random
 
-delay=0.1
-score = 0
-high_score = 0
-    
-#window
-wn = turtle.Screen()
-wn.title("The Snake Game")
-wn.bgcolor("light green")
-wn.setup(width=700, height=700)
-wn.tracer(0)
+# Delay Between Frames
+delay = 0.1
 
-#game_boundary
+# Screen Setup
+screen_size = 650
+screen = turtle.Screen()
+screen.title("The Snake Game")
+screen.bgcolor("orange")
+screen.setup(width=screen_size, height=screen_size)
+screen.tracer(0)
+
+# Game Boundary
+boundary_size = 250
 turtle.speed(5)
 turtle.pensize(5)
+turtle.color('white')
 turtle.penup()
-turtle.goto(-310,250)
+turtle.goto(-boundary_size, boundary_size)
 turtle.pendown()
-turtle.color('green')
-turtle.forward(620)
-turtle.right(90)
-turtle.forward(520)
-turtle.right(90)
-turtle.forward(620)
-turtle.right(90)
-turtle.forward(520)
-turtle.penup()
+for _ in range(4):
+    turtle.forward(boundary_size * 2)
+    turtle.right(90)
 turtle.hideturtle()
 
-#snake
+# Snake Head
 head = turtle.Turtle()
 head.speed(0)
 head.shape("square")
@@ -63,130 +59,125 @@ head.penup()
 head.goto(0, 0)
 head.direction = "Stop"
 
-#food
+# Snake Body
+segments = []
+segment_size = 20
+
+# Food
 food = turtle.Turtle()
-x_cord = random.randint(-290, 270)
-y_cord = random.randint(-240, 240) 
 food.speed(0)
 food.shape("circle")
 food.color("red")
 food.penup()
-food.goto(x_cord, y_cord)
 
-#scoreboard
-scoreBoard = turtle.Turtle()
-scoreBoard.speed(0)
-scoreBoard.shape("square")
-scoreBoard.color("white smoke")
-scoreBoard.penup()
-scoreBoard.hideturtle()
-scoreBoard.goto(0, 260)
-scoreBoard.write("Your Score: 0  Highest Score: 0", align="center",
-        font=("Arial", 30, "bold"))
+def place_food():
+    """Randomly place the food."""
+    x_cord = random.randint(-boundary_size + segment_size, boundary_size - segment_size)
+    y_cord = random.randint(-boundary_size + segment_size, boundary_size - segment_size)
+    food.goto(x_cord, y_cord)
 
-#movement
-def move_up():
-    if head.direction != "down":
-        head.direction = "up"
+place_food()
 
-def move_down():
-    if head.direction != "up":
-        head.direction = "down"
+# Scoreboard
+font = ("Courier", 25, "bold")
+score, high_score = 0, 0
 
-def move_left():
-    if head.direction != "right":
-        head.direction = "left"
+scoreboard = turtle.Turtle()
+scoreboard.speed(0)
+scoreboard.color("white smoke")
+scoreboard.penup()
+scoreboard.hideturtle()
+scoreboard.goto(0, boundary_size + 10)
 
-def move_right():
-    if head.direction != "left":
-        head.direction = "right"
+def update_score():
+    scoreboard.clear()
+    scoreboard.write(f"Score: {score}  High Score: {high_score}", align="center", font=font)
 
+update_score()
+
+# Instructions
+instructions = turtle.Turtle()
+instructions.speed(0)
+instructions.color("white smoke")
+instructions.penup()
+instructions.hideturtle()
+instructions.goto(0, - boundary_size - 50)
+instructions.write("To Move: WASD/Arrow | To Quit: Q", align="center", font=font)
+
+# Movement
 def move():
     if head.direction == "up":
-        y = head.ycor()
-        head.sety(y+20)
-    if head.direction == "down":
-        y = head.ycor()
-        head.sety(y-20)
-    if head.direction == "left":
-        x = head.xcor()
-        head.setx(x-20)
-    if head.direction == "right":
-        x = head.xcor()
-        head.setx(x+20)
+        head.sety(head.ycor() + segment_size)
+    elif head.direction == "down":
+        head.sety(head.ycor() - segment_size)
+    elif head.direction == "left":
+        head.setx(head.xcor() - segment_size)
+    elif head.direction == "right":
+        head.setx(head.xcor() + segment_size)
 
-#keypress
-wn.listen()
-wn.onkeypress(move_up, "w")
-wn.onkeypress(move_down, "s")
-wn.onkeypress(move_left, "a")
-wn.onkeypress(move_right, "d")
+def set_direction(direction, opposite):
+    if head.direction != opposite:
+        head.direction = direction
 
-wn.onkeypress(move_up, "W")
-wn.onkeypress(move_down, "S")
-wn.onkeypress(move_left, "A")
-wn.onkeypress(move_right, "D")
+# Keyboard Bindings
+screen.listen()
+keys = [
+    ("up", "down", "Up"), ("down", "up", "Down"), ("left", "right", "Left"), ("right", "left", "Right"),
+    ("up", "down", "w"), ("down", "up", "s"), ("left", "right", "a"), ("right", "left", "d")
+]
+for direction, opposite, key in keys:
+    screen.onkeypress(lambda d=direction, o=opposite: set_direction(d, o), key)
 
-wn.onkeypress(move_up, "Up")
-wn.onkeypress(move_down, "Down")
-wn.onkeypress(move_left, "Left")
-wn.onkeypress(move_right, "Right")
 
-#other
-segments = []
+# Quit Game
+quit_key = "q"
+screen.onkeypress(lambda: screen.bye(), quit_key)
 
+# Reset Game
+def reset_game():
+    global score
+    time.sleep(0.5)
+    head.goto(0, 0)
+    head.direction = "stop"
+    [segment.goto(1000, 1000) for segment in segments]
+    segments.clear()
+    score = 0
+    update_score()
+
+# Main Game Loop
 while True:
-    wn.update()
+    screen.update()
 
-    if head.xcor() > 280 or head.xcor() < -280 or head.ycor() > 230 or head.ycor() < -240:
-        time.sleep(1)
-        wn.clear()
-        wn.bgcolor('light blue')
-        scoreBoard.goto(0,0)
-        scoreBoard.write("    GAME OVER\nYour Score is : {}".format(
-            score), align="center", font=("Arial", 40, "bold"))
+    # Border Collision
+    if abs(head.xcor()) > boundary_size - segment_size or abs(head.ycor()) > boundary_size - segment_size:
+        reset_game()
 
-    if head.distance(food) < 20:
+     # Body Collision
+    for segment in segments:
+        if segment.distance(head) < segment_size:
+            reset_game()
+
+    # Food Collision
+    if head.distance(food) < segment_size:
         score += 10
         if score > high_score:
             high_score = score
-        scoreBoard.clear()
-        scoreBoard.write("Score : {} High Score : {} ".format(
-            score, high_score), align="center", font=("Arial", 25, "bold"))
+        update_score()
+        place_food()
 
-        x_cord = random.randint(-270, 270)
-        y_cord = random.randint(-230, 220) 
-        food.speed(0)
-        food.shape("circle")
-        food.color("red")
-        food.goto(x_cord, y_cord)
-
+        # Add Segment
         new_segment = turtle.Turtle()
-        new_segment.speed(0)
         new_segment.shape("square")
         new_segment.color("white smoke")
         new_segment.penup()
         segments.append(new_segment)
 
-    for i in range(len(segments)-1, 0, -1):
-        x = segments[i-1].xcor()
-        y = segments[i-1].ycor()
+    # Move Segments
+    for i in range(len(segments) - 1, 0, -1):
+        x, y = segments[i - 1].pos()
         segments[i].goto(x, y)
-    if len(segments) > 0:
-        x = head.xcor()
-        y = head.ycor()
-        segments[0].goto(x, y)
+    if segments:
+        segments[0].goto(head.pos())
+
     move()
-
-    for segment in segments:
-        if segment.distance(head) < 20:
-            time.sleep(1)
-            wn.clear()
-            wn.bgcolor('light blue')
-            scoreBoard.goto(0,0)
-            scoreBoard.write("    GAME OVER\nYour Score is : {}".format(
-                score), align="center", font=("Arial", 40, "bold"))
-
     time.sleep(delay)
-
-turtle.Terminator()
