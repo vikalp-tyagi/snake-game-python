@@ -7,10 +7,10 @@ Welcome to the Snake Game built in Python! This is a simple implementation of th
 Here are some screenshots of the game in action:
 
 ### Screenshot 1
-![Screenshot1](Screenshots/Screenshot1.png)
+![Screenshot1](Screenshots/Screenshot1.PNG)
 
 ### Screenshot 2
-![Screenshot2](Screenshots/Screenshot2.png)
+![Screenshot2](Screenshots/Screenshot2.PNG)
 
 ## How to Play
 
