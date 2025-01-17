@@ -26,10 +26,10 @@ import turtle
 import time
 import random
 
-# Delay Between Frames
+# DELAY BETWEEN FRAMES
 delay = 0.1
 
-# Screen Setup
+# SCREEN
 screen_size = 650
 screen = turtle.Screen()
 screen.title("The Snake Game")
@@ -37,7 +37,7 @@ screen.bgcolor("orange")
 screen.setup(width=screen_size, height=screen_size)
 screen.tracer(0)
 
-# Game Boundary
+# GAME BOUNDARY
 boundary_size = 250
 turtle.speed(5)
 turtle.pensize(5)
@@ -50,7 +50,7 @@ for _ in range(4):
     turtle.right(90)
 turtle.hideturtle()
 
-# Snake Head
+# SNAKE
 head = turtle.Turtle()
 head.speed(0)
 head.shape("square")
@@ -59,11 +59,10 @@ head.penup()
 head.goto(0, 0)
 head.direction = "Stop"
 
-# Snake Body
 segments = []
 segment_size = 20
 
-# Food
+# FOOD
 food = turtle.Turtle()
 food.speed(0)
 food.shape("circle")
@@ -78,7 +77,7 @@ def place_food():
 
 place_food()
 
-# Scoreboard
+# SCOREBOARD
 font = ("Courier", 25, "bold")
 score, high_score = 0, 0
 
@@ -95,7 +94,7 @@ def update_score():
 
 update_score()
 
-# Instructions
+# INSTRUCTIONS
 instructions = turtle.Turtle()
 instructions.speed(0)
 instructions.color("white smoke")
@@ -104,7 +103,7 @@ instructions.hideturtle()
 instructions.goto(0, - boundary_size - 50)
 instructions.write("To Move: WASD/Arrow | To Quit: Q", align="center", font=font)
 
-# Movement
+# MOVEMENT
 def move():
     if head.direction == "up":
         head.sety(head.ycor() + segment_size)
@@ -119,7 +118,7 @@ def set_direction(direction, opposite):
     if head.direction != opposite:
         head.direction = direction
 
-# Keyboard Bindings
+# KEYBOARD BINDINGS
 screen.listen()
 keys = [
     ("up", "down", "Up"), ("down", "up", "Down"), ("left", "right", "Left"), ("right", "left", "Right"),
@@ -128,12 +127,10 @@ keys = [
 for direction, opposite, key in keys:
     screen.onkeypress(lambda d=direction, o=opposite: set_direction(d, o), key)
 
-
-# Quit Game
 quit_key = "q"
 screen.onkeypress(lambda: screen.bye(), quit_key)
 
-# Reset Game
+# RESET GAME
 def reset_game():
     global score
     time.sleep(0.5)
@@ -144,35 +141,34 @@ def reset_game():
     score = 0
     update_score()
 
-# Main Game Loop
+# MAIN
 while True:
     screen.update()
 
-    # Border Collision
+    # BORDER COLLISION
     if abs(head.xcor()) > boundary_size - segment_size or abs(head.ycor()) > boundary_size - segment_size:
         reset_game()
 
-     # Body Collision
+     # BODY COLLISION
     for segment in segments:
         if segment.distance(head) < segment_size:
             reset_game()
 
-    # Food Collision
+    # FOOD COLLISION
     if head.distance(food) < segment_size:
         score += 10
         if score > high_score:
             high_score = score
         update_score()
         place_food()
-
-        # Add Segment
+        
         new_segment = turtle.Turtle()
         new_segment.shape("square")
         new_segment.color("white smoke")
         new_segment.penup()
         segments.append(new_segment)
 
-    # Move Segments
+    # MOVE SEGMENTS
     for i in range(len(segments) - 1, 0, -1):
         x, y = segments[i - 1].pos()
         segments[i].goto(x, y)
